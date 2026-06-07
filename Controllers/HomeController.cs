@@ -6,27 +6,39 @@ namespace FuniCalcPro.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        
+            public IActionResult Index()
+            {
+                return View(new CalculatorModel());
+            }
 
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
+            [HttpPost]
+            public IActionResult Calculate(CalculatorModel model)
+            {
+                switch (model.Operation)
+                {
+                    case "+":
+                        model.Result = model.Number1 + model.Number2;
+                        break;
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+                    case "-":
+                        model.Result = model.Number1 - model.Number2;
+                        break;
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+                    case "*":
+                        model.Result = model.Number1 * model.Number2;
+                        break;
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+                    case "/":
+                        model.Result = model.Number2 != 0
+                            ? model.Number1 / model.Number2
+                            : 0;
+                        break;
+                }
+
+                return View("Index", model);
+            }
+        
     }
 }
+
